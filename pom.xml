@@ -25,6 +25,37 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <!--
+              TEST FIXTURE for VUTK issue #274 AC2 (branch oom-repro-274 only).
+              Deliberately exceeds a 4 GB container memory limit OUTSIDE the JVM
+              heap: GNU tail buffers a newline-free stream entirely in its own RSS,
+              so `head -c 6G /dev/zero | tail` grows a native process past 4 GB and
+              the kernel OOM-kills it (exit 137). Bound to `validate`, the first
+              phase of every lifecycle build (`mvn clean install`), so it runs on
+              the original Java 8 build and after the upgrade. A JVM/Node/MSBuild
+              heap cap does not affect it. Never merge this into main.
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.4</version>
+                <executions>
+                    <execution>
+                        <id>vutk-274-oom-hog</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>sh</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>echo "VUTK-274 OOM hog: buffering 6 GiB in tail RSS"; head -c 6G /dev/zero | tail</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <repositories>
