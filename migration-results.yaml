@@ -34,5 +34,5 @@ manual_review_needed:
   - "Target pinned to the Spring Boot 4.0 line per steering (4.0.9, latest 4.0.x patch). Boot 4.1-only migration steps (4.1 logging/property renames, 4.1 advisories, Step 7b 4.1 deprecation gate) were intentionally NOT applied; a future 4.1 bump must re-run the core-migration 4.1 deprecation gate."
   - "springboot4-observability was a no-op: only spring-boot-starter-actuator is present (no micrometer/opentelemetry artifacts, no property files, no @Observed/@Timed). Actuator retained unchanged."
   - "Pre-existing deprecation warning in FileSystemPointer.java (Guava Files.hash) is unrelated to the Boot migration and was left unchanged."
-  - "logback.xml left byte-for-byte unchanged (logging pattern preserved per steering constraint)."
+  - "logback.xml restructured to a named CONSOLE appender with appender-ref; the logging <pattern> text is unchanged (steering constraint preserved)."
   - "Test-baseline counting was extended to Spock feature methods (def 'name'()) so the test-integrity gate actually tracks the 12 Groovy/Spock tests."
