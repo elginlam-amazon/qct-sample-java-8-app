@@ -1,0 +1,35 @@
+repo: download-server
+spring_boot_source: "3.5.16"
+spring_boot_target: "4.0.9"
+build_tool: maven
+
+results:
+  compilation: PASS
+  test_integrity: PASS
+  test_execution: 12
+  unit_tests:
+    total: 12
+    passed: 12
+    failed: 0
+    skipped: 0
+  deprecated_patterns:
+    jackson2_imports: 0
+    mockbean_annotations: 0
+    security_legacy_dsl: 0
+    old_property_keys: 0
+    old_starter_names: 0
+
+build_log: "/data/code/build.log"
+build_command: "mvn clean verify"
+
+tds_applied:
+  - springboot4-core-migration
+  - springboot4-observability
+  - springboot4-verification
+
+manual_review_needed:
+  - "Target pinned to the Boot 4.0 line (4.0.9, latest 4.0.x on Maven Central) per steering context 'Spring Boot 4.0 exactly'. A future bump to 4.1.x MUST first re-run the core-migration pre-4.1 deprecation gate (TD core Step 7b) and the 4.1-only property/logging renames, which were intentionally not applied here."
+  - "Observability TD was a no-op: only spring-boot-starter-actuator is present (still valid in Boot 4); no micrometer/opentelemetry/zipkin artifacts and no management.otlp.* properties exist to migrate."
+  - "Project targets Java 25 (above the Boot 4 recommended 21); left unchanged - no downgrade performed."
+  - "Test-baseline/integrity counting was extended to Spock feature methods (def 'name'()) and *Test.groovy, since the default @Test-only regex records Spock specs as 0 tests."
+  - "src/test/java/org/springframework/web/filter/Sha512ShallowEtagHeaderFilter.java declares a class inside the Spring framework package to access the protected generateETagHeaderValue hook. It still compiles on Spring Framework 7, but this package-intrusion is fragile across future Spring upgrades."

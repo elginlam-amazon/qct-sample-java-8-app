@@ -1,0 +1,79 @@
+{
+  "project_root": "/data/code",
+  "strategy": "flat",
+  "build_tool": "maven",
+  "dual_build_system": false,
+  "build_command": "JAVA_HOME=/usr/lib/jvm/java-25-amazon-corretto.aarch64 mvn clean verify",
+  "spring_boot_version_current": "3.5.16",
+  "spring_boot_target": "4.0.9",
+  "target_line_constraint": "Steering context: Spring Boot 4.0 exactly -> latest 4.0.x patch from Maven Central (4.0.9). Boot 4.1-only steps (4.1 logging/property renames, 4.1 advisories, Step 7b pre-4.1 deprecation gate) do NOT apply.",
+  "abort": false,
+  "already_partially_migrated": false,
+  "java": {
+    "current": "25",
+    "target": "25",
+    "java_upgrade_needed": false,
+    "note": "Project already targets Java 25 (> Boot 4 minimum 17 / recommended 21); never downgrade."
+  },
+  "complexity_tier": "green-small",
+  "detections": {
+    "modules": 1,
+    "estimated_loc": 659,
+    "jackson_usage": false,
+    "jackson_custom_serializers": 0,
+    "security_present": false,
+    "security_filter_chain_count": 0,
+    "mockbean_usage": 0,
+    "spybean_usage": 0,
+    "observability": true,
+    "reactive": false,
+    "spring_ai_present": false,
+    "spring_ai_version": "",
+    "mcp_present": false,
+    "spring_batch_present": false,
+    "spring_kafka_present": false,
+    "spring_amqp_present": false,
+    "spring_cloud_present": false,
+    "native_aot_present": false,
+    "jersey_present": false,
+    "spring_retry_present": false,
+    "jspecify_relevant": false,
+    "undertow_present": false,
+    "embedded_server_swap_present": false,
+    "springdoc_or_sba_present": false,
+    "thirdparty_compat_present": false,
+    "spring_grpc_present": false,
+    "jooq_present": false
+  },
+  "tds_required": [
+    "springboot4-core-migration",
+    "springboot4-observability",
+    "springboot4-verification"
+  ],
+  "tds_skipped": [
+    "springboot4-security-testing",
+    "springboot4-spring-ai",
+    "springboot4-spring-batch",
+    "springboot4-spring-kafka",
+    "springboot4-spring-amqp",
+    "springboot4-spring-cloud",
+    "springboot4-native-aot",
+    "springboot4-jersey",
+    "springboot4-spring-retry",
+    "springboot4-jspecify",
+    "springboot4-embedded-servers",
+    "springboot4-springdoc-sba",
+    "springboot4-thirdparty-compat",
+    "springboot4-grpc"
+  ],
+  "blockers": [],
+  "risks": [],
+  "recommendations": {
+    "use_bridges": false,
+    "extended_timeout": false,
+    "manual_review_areas": [
+      "Spock spec extends a test-scope class in the org.springframework.web.filter package; verify ShallowEtagHeaderFilter API under Spring Framework 7",
+      "Future bump to Boot 4.1 must re-run the core-migration pre-4.1 deprecation gate (Step 7b)"
+    ]
+  }
+}
