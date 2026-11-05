@@ -1,0 +1,40 @@
+repo: download-server
+spring_boot_source: "3.5.6"
+spring_boot_target: "4.0.9"
+build_tool: maven
+
+results:
+  compilation: PASS
+  test_integrity: PASS
+  test_execution: 12
+  unit_tests:
+    total: 12
+    passed: 12
+    failed: 0
+    skipped: 0
+  deprecated_patterns:
+    jackson2_imports: 0
+    mockbean_annotations: 0
+    security_legacy_dsl: 0
+    old_property_keys: 0
+    old_starter_names: 0
+
+build_log: /data/code/build.log
+build_command: "mvn clean verify"
+java_version: "25 (unchanged; build JDK Corretto 25.0.5)"
+
+changes_applied:
+  - "pom.xml: spring-boot-starter-parent 3.5.6 -> 4.0.9"
+  - "pom.xml: spring-boot-starter-web -> spring-boot-starter-webmvc"
+
+tds_applied:
+  - springboot4-core-migration
+  - springboot4-observability
+  - springboot4-verification
+
+manual_review_needed:
+  - "Target pinned to the Spring Boot 4.0 line (4.0.9) by the steering context. Spring Boot 4.1-only migration work is OUT OF SCOPE for this run and must be performed on a future 4.1 bump: the 4.1 logging.file.*/logging.pattern.* -> logging.logback.rollingpolicy.* property renames, the 4.1 removed properties (spring.data.redis.lettuce.cluster.refresh.adaptive, spring.datasource.oracleucp.role-name), the 4.1 advisories (Derby deprecation, spring.devtools.livereload.*, spring.elasticsearch.socket-keep-alive default flip), and the mandatory pre-4.1 deprecation gate (compile with -Dmaven.compiler.showDeprecation=true -Dmaven.compiler.failOnWarning=true on 4.0.x before raising to 4.1.x)."
+  - "Jackson 3, Spring Security 7, @MockBean/@SpyBean, Testcontainers, property-file, Spring Cloud/AI/Batch/Kafka/AMQP, Native/AOT, Jersey, Retry, JSpecify, embedded-server, SpringDoc/SBA, third-party-compat and gRPC migration steps were genuine no-ops: none of those coordinates, imports or property keys exist in this project (verified by grep). The project has no application*.properties/yml at all."
+  - "springboot4-observability Steps 2-5 non-applicable: the only observability coordinate present is org.springframework.boot:spring-boot-starter-actuator (retained unchanged). The upstream coordinates those steps migrate (io.micrometer:micrometer-tracing-bridge-otel / -brave, io.opentelemetry:opentelemetry-exporter-otlp, io.zipkin.reporter2:zipkin-reporter-brave) are absent, as are management.otlp.* properties and @Observed/@Timed usage."
+  - "Spock test accounting: .migration-test-baseline.tsv was generated with Spock-aware counting (feature methods matched via /^\\s*def\\s+['\"]/ ) so DownloadControllerTest.groovy records 12 tests rather than 0; the Step 2a comparison used the same counting. All 12 feature methods and their assertion blocks are preserved and executed."
+  - "src/test/java/org/springframework/web/filter/Sha512ShallowEtagHeaderFilter.java subclasses Spring Framework's ShallowEtagHeaderFilter from inside the framework's own package. It compiles and runs unchanged on Spring Framework 7, but it depends on a protected framework API and should be reviewed on future Framework upgrades."
