@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public class FileExamples {
 
-	public static final UUID TXT_FILE_UUID = UUID.randomUUID();
+	public static final UUID TXT_FILE_UUID = UUID.fromString("1a2b3c4d-0000-4000-8000-000000000001");
 	public static final FilePointer TXT_FILE = txtFile();
-	public static final UUID NOT_FOUND_UUID = UUID.randomUUID();
+	public static final UUID NOT_FOUND_UUID = UUID.fromString("1a2b3c4d-0000-4000-8000-000000000002");
 
 	private static FileSystemPointer txtFile() {
 		final URL resource = FileStorageStub.class.getResource("/download.txt");
