@@ -6,10 +6,11 @@
     <logger name="org" level="INFO"/>
 
     <root level="DEBUG">
-        <appender class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%d{HH:mm:ss.SSS} | %thread | %-5level | %logger{1} | %msg%n</pattern>
-            </encoder>
-        </appender>
+        <appender-ref ref="CONSOLE"/>
     </root>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} | %thread | %-5level | %logger{1} | %msg%n</pattern>
+        </encoder>
+    </appender>
 </configuration>
