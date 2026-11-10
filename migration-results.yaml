@@ -1,9 +1,9 @@
-migration:
-  spring_boot_source: "3.5.16"
-  spring_boot_target: "4.0.9"
-  build_tool: maven
-  build_command: "mvn clean verify"
-  java_version: "25"
+repo: download-server
+spring_boot_source: "3.5.16"
+spring_boot_target: "4.0.9"
+build_tool: maven
+build_command: "mvn clean verify"
+java_version: "25"
 
 results:
   compilation: PASS
