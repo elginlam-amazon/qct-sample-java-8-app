@@ -1,0 +1,38 @@
+repo: download-server
+spring_boot_source: "3.5.16"
+spring_boot_target: "4.0.9"
+build_tool: maven
+
+results:
+  compilation: PASS
+  test_integrity: PASS
+  test_execution: 12
+  unit_tests:
+    total: 12
+    passed: 12
+    failed: 0
+    skipped: 0
+  runtime_smoke_test: PASS
+  deprecated_patterns:
+    jackson2_imports: 0
+    mockbean_annotations: 0
+    security_legacy_dsl: 0
+    old_property_keys: 0
+    old_starter_names: 0
+
+build_log: "~/.aws/atx/custom/20261111_040359_71d74429/artifacts/build-verify.log"
+build_command: "mvn clean verify"
+
+tds_applied:
+  - springboot4-core-migration
+  - springboot4-verification
+
+tds_non_applicable:
+  - name: springboot4-observability
+    observation: "Only spring-boot-starter-actuator is present; no micrometer-core/registry, OpenTelemetry, or org.springframework.boot.actuate.autoconfigure.* references exist in source, and there are no management.* properties to rename."
+
+manual_review_needed:
+  - "Target version pinned to 4.0.9 (latest 4.0.x patch) per steering context 'Spring Boot 4.0 exactly'; the skill default 4.1.x was intentionally not used."
+  - "Project builds on JDK 25 (java.version=25) while Boot 4 targets 17/21; retained as-is (no downgrade). Groovy 5 / gmavenplus 5.1.0 / Mockito javaagent config already handle JDK 25."
+  - "Runtime check performed manually via 'mvn org.springframework.boot:spring-boot-maven-plugin:run' (no spring-boot-maven-plugin declared in pom, so no executable jar): GET /actuator/health returned 200. 'mvn clean verify' alone does not boot the app."
+  - "Pre-existing code smell left untouched (out of scope): MainApplication.main calls new Integer(\"1234\")."

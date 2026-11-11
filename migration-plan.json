@@ -1,0 +1,76 @@
+{
+  "project": "download-server",
+  "strategy": "flat",
+  "build_tool": "maven",
+  "dual_build_system": false,
+  "build_command": "mvn clean verify",
+  "spring_boot_current": "3.5.16",
+  "spring_boot_target": "4.0.9",
+  "target_note": "Steering context requires Spring Boot 4.0 exactly; pinned to the latest 4.0.x patch (4.0.9) verified on Maven Central.",
+  "java_version_current": "25",
+  "java_version_target": "25",
+  "java_upgrade_needed": false,
+  "abort": false,
+  "complexity_tier": "green-small",
+  "detections": {
+    "modules": 1,
+    "estimated_loc": 663,
+    "jackson_usage": false,
+    "jackson_custom_serializers": 0,
+    "security_present": false,
+    "security_filter_chain_count": 0,
+    "mockbean_usage": 0,
+    "spybean_usage": 0,
+    "observability": true,
+    "reactive": false,
+    "spring_ai_present": false,
+    "spring_ai_version": "",
+    "mcp_present": false,
+    "spring_batch_present": false,
+    "spring_kafka_present": false,
+    "spring_amqp_present": false,
+    "spring_cloud_present": false,
+    "native_aot_present": false,
+    "jersey_present": false,
+    "spring_retry_present": false,
+    "jspecify_relevant": false,
+    "undertow_present": false,
+    "embedded_server_swap_present": false,
+    "springdoc_or_sba_present": false,
+    "thirdparty_compat_present": false,
+    "spring_grpc_present": false,
+    "jooq_present": false
+  },
+  "tds_required": [
+    "springboot4-core-migration",
+    "springboot4-observability",
+    "springboot4-verification"
+  ],
+  "tds_skipped": [
+    "springboot4-security-testing",
+    "springboot4-spring-ai",
+    "springboot4-spring-batch",
+    "springboot4-spring-kafka",
+    "springboot4-spring-amqp",
+    "springboot4-spring-cloud",
+    "springboot4-native-aot",
+    "springboot4-jersey",
+    "springboot4-spring-retry",
+    "springboot4-jspecify",
+    "springboot4-embedded-servers",
+    "springboot4-springdoc-sba",
+    "springboot4-thirdparty-compat",
+    "springboot4-grpc"
+  ],
+  "blockers": [],
+  "risks": [
+    "Build JDK is 25 while Boot 4 targets 17/21; Groovy 5 + gmavenplus 5.1.0 and Mockito agent config already account for JDK 25."
+  ],
+  "recommendations": {
+    "use_bridges": false,
+    "extended_timeout": false,
+    "manual_review_areas": [
+      "Spock spec uses MockMvcBuilders.webAppContextSetup; confirm MockMvc behaviour under Spring Framework 7"
+    ]
+  }
+}
