@@ -1,0 +1,68 @@
+repo: download-server
+spring_boot_source: "3.5.16"
+spring_boot_target: "4.0.9"
+build_tool: maven
+
+build_log: "/data/code/build.log"
+build_command: "./mvnw clean verify"
+
+results:
+  compilation: PASS
+  test_integrity: PASS
+  test_execution: 12
+  unit_tests:
+    total: 12
+    passed: 12
+    failed: 0
+    skipped: 0
+  deprecated_patterns:
+    jackson2_imports: 0
+    mockbean_annotations: 0
+    security_legacy_dsl: 0
+    old_property_keys: 0
+    old_starter_names: 0
+  runtime_smoke_test:
+    launch: "./mvnw org.springframework.boot:spring-boot-maven-plugin:run -Dspring-boot.run.arguments=--server.port=8099"
+    started: "Started MainApplication in 2.066 seconds (Tomcat 11.0.27 on port 8099)"
+    actuator_health: "200 UP"
+    download_get: "200"
+    download_if_none_match: "304"
+    download_without_filename: "301"
+    download_head: "200"
+  cve_scan:
+    status: PASS
+    scanned:
+      - "org.springframework.boot:spring-boot-starter-parent:4.0.9"
+      - "org.apache.tomcat.embed:tomcat-embed-core:11.0.27"
+      - "tools.jackson.core:jackson-databind:3.1.7"
+      - "org.springframework:spring-core/spring-web/spring-webmvc:7.0.10"
+      - "ch.qos.logback:logback-core:1.5.38"
+      - "org.yaml:snakeyaml:2.5"
+      - "com.google.guava:guava:33.8.0-jre"
+      - "commons-io:commons-io:2.20.0"
+      - "commons-codec:commons-codec:1.20.0"
+      - "org.apache.logging.log4j:log4j-api:2.25.5"
+      - "net.bytebuddy:byte-buddy:1.17.8"
+    note: >-
+      The Boot 3.5.16 tree previously resolved tomcat-embed-core 10.1.55 and jackson-databind 2.21.4
+      (pinned up via explicit properties). Boot 4.0.9 resolves Tomcat 11.0.27 and Jackson 3.1.7, so
+      the explicit tomcat.version / jackson-bom.version overrides were removed and no CVE is reported.
+
+tds_applied:
+  - springboot4-core-migration
+  - springboot4-security-testing
+  - springboot4-observability
+  - springboot4-verification
+
+changes:
+  - "pom.xml: spring-boot-starter-parent 3.5.16 -> 4.0.9"
+  - "pom.xml: spring-boot-starter-web -> spring-boot-starter-webmvc"
+  - "pom.xml: removed <tomcat.version> and <jackson-bom.version> overrides (now BOM-managed)"
+  - "pom.xml: added test-scope spring-boot-starter-webmvc-test (MockMvc under Boot 4)"
+  - "No Java/Groovy source changes were required."
+
+manual_review_needed:
+  - "Spring Boot held at the 4.0.x line (4.0.9) per the steering instruction 'upgrade Spring Boot to version 4.0 exactly'; the skill's default target is 4.1.x. A later move to 4.1 requires the Step 7b pre-4.1 deprecation gate."
+  - "Observability TD was a no-op: only spring-boot-starter-actuator is present, with no micrometer/OTel code, no management.otlp.* properties and no @Observed/@Timed usage."
+  - "Runtime smoke test was executed manually on port 8099 (GET 200, If-None-Match 304, /{uuid} 301, HEAD 200, /actuator/health UP); mvn clean verify alone does not boot the app, so re-run this check in staging."
+  - "The project declares no spring-boot-maven-plugin, so no executable fat jar is produced; deployment tooling must keep launching it the way it does today."
