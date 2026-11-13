@@ -1,0 +1,26 @@
+repo: download-server
+spring_boot_source: "3.5.16"
+spring_boot_target: "4.0.9"
+build_tool: maven
+
+results:
+  compilation: PASS
+  test_integrity: PASS
+  test_execution: 12
+  unit_tests:
+    total: 12
+    passed: 12
+    failed: 0
+    skipped: 0
+  deprecated_patterns:
+    jackson2_imports: 0
+    mockbean_annotations: 0
+    security_legacy_dsl: 0
+    old_property_keys: 0
+    old_starter_names: 0
+
+build_log: /tmp/build1.log
+
+manual_review_needed:
+  - "Target pinned to the Spring Boot 4.0 line (4.0.9) per steering context; a future bump to 4.1.x must re-run the core-migration Step 7b 4.1 deprecation gate and the 4.1 property/logging key renames."
+  - "Test baseline counts Spock feature methods (def '...'()) because the skill's default @Test regex does not match Groovy/Spock specs."
