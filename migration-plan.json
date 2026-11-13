@@ -1,0 +1,77 @@
+{
+  "strategy": "flat",
+  "abort": false,
+  "build_tool": "maven",
+  "build_command": "JAVA_HOME=/usr/lib/jvm/java-25-amazon-corretto mvn clean verify",
+  "dual_build_system": false,
+  "spring_boot_version_detected": "3.5.16",
+  "spring_boot_target_version": "4.0.9",
+  "java": {
+    "detected": "25",
+    "target": "25",
+    "java_upgrade_needed": false
+  },
+  "detections": {
+    "jackson_usage": 0,
+    "jackson_custom_serializers": 0,
+    "security_present": false,
+    "security_filter_chain_count": 0,
+    "mockbean_usage": 0,
+    "spybean_usage": 0,
+    "observability": ["spring-boot-starter-actuator"],
+    "reactive": false,
+    "modules": 1,
+    "estimated_loc": 656,
+    "spring_ai_present": false,
+    "spring_ai_version": "",
+    "mcp_present": false,
+    "spring_batch_present": false,
+    "spring_kafka_present": false,
+    "spring_amqp_present": false,
+    "spring_cloud_present": false,
+    "native_aot_present": false,
+    "jersey_present": false,
+    "spring_retry_present": false,
+    "jspecify_relevant": false,
+    "undertow_present": false,
+    "embedded_server_swap_present": false,
+    "springdoc_or_sba_present": false,
+    "thirdparty_compat_present": false,
+    "spring_grpc_present": false,
+    "jooq_present": false
+  },
+  "tds_required": [
+    "springboot4-core-migration",
+    "springboot4-security-testing",
+    "springboot4-observability",
+    "springboot4-verification"
+  ],
+  "tds_skipped": [
+    "springboot4-spring-ai",
+    "springboot4-spring-batch",
+    "springboot4-spring-kafka",
+    "springboot4-spring-amqp",
+    "springboot4-spring-cloud",
+    "springboot4-native-aot",
+    "springboot4-jersey",
+    "springboot4-spring-retry",
+    "springboot4-jspecify",
+    "springboot4-embedded-servers",
+    "springboot4-springdoc-sba",
+    "springboot4-thirdparty-compat",
+    "springboot4-grpc"
+  ],
+  "complexity_tier": "green-small",
+  "blockers": [],
+  "risks": [],
+  "recommendations": {
+    "use_bridges": false,
+    "extended_timeout": false,
+    "manual_review_areas": [
+      "Spock 2.4-groovy-4.0 compatibility with the JUnit Platform version managed by Boot 4.0",
+      "Test-scope override of org.springframework.web.filter.ShallowEtagHeaderFilter (Sha512ShallowEtagHeaderFilter) against Spring Framework 7 signatures",
+      "Steering constraint: stay on the Spring Boot 4.0.x line (4.0.9), not 4.1.x"
+    ]
+  },
+  "notes": "springboot4-security-testing is required because MockMvc-based tests are present (needs spring-boot-starter-webmvc-test); no Spring Security in the project."
+}
