@@ -10,6 +10,8 @@
         <maven.compiler.release>25</maven.compiler.release>
         <groovy.version>5.0.8</groovy.version>
         <spock.version>2.5-groovy-5.0</spock.version>
+        <tomcat.version>10.1.59</tomcat.version>
+        <jackson-bom.version>2.21.7</jackson-bom.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
