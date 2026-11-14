@@ -1,0 +1,37 @@
+spring_boot:
+  from: 3.5.16
+  to: 4.0.9
+  target_rationale: "Explicit requirement: Spring Boot 4.0 exactly. 4.0.9 is the latest 4.0.x patch on Maven Central."
+java:
+  from: 25
+  to: 25
+build:
+  tool: maven
+  command: "mvn -B clean install -Dspotbugs.skip=true -Dcheckstyle.skip=true"
+  status: SUCCESS
+  log: "console output of final build (2026-11-14T16:00:45Z)"
+unit_tests:
+  run: 12
+  failures: 0
+  errors: 0
+  skipped: 0
+  baseline_test_methods: 12
+changes:
+  - "pom.xml: spring-boot-starter-parent 3.5.16 -> 4.0.9"
+  - "pom.xml: spring-boot-starter-web -> spring-boot-starter-webmvc"
+  - "Added code-intelligence-report.md, migration-plan.json, .migration-test-baseline.tsv (migration artifacts)"
+tds_applied:
+  springboot4-core-migration: PASS
+  springboot4-observability: PASS (no micrometer/otel coordinates or actuator-autoconfigure imports; actuator starter unchanged)
+  springboot4-verification: PASS
+not_applicable:
+  - "Jackson 3 migration: project has no Jackson coordinates or imports"
+  - "Property migration: project has no application*.properties/yml files"
+  - "Security/testing TD: no Spring Security deps, no @MockBean/@SpyBean, no Testcontainers"
+  - "Spring AI/Batch/Kafka/AMQP/Cloud/Native-AOT/Jersey/Retry/gRPC/SpringDoc/SBA/JSpecify/embedded-server/thirdparty: signals absent"
+cve_check:
+  org.springframework.boot:4.0.9: "no known vulnerabilities"
+manual_review_needed:
+  - "Actuator endpoint exposure defaults differ between Boot 3.x and Boot 4 - confirm production expectations."
+  - "spring-boot-maven-plugin is not declared, so no executable fat jar is produced (pre-existing condition)."
+  - "Mockito -javaagent argLine workaround for JDK 25 remains in surefire config (pre-existing)."
