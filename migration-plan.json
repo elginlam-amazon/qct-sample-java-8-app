@@ -1,0 +1,83 @@
+{
+  "strategy": "flat",
+  "build_tool": "maven",
+  "build_command": "mvn -B clean install -Dspotbugs.skip=true -Dcheckstyle.skip=true",
+  "dual_build_system": false,
+  "abort": false,
+  "already_partially_migrated": false,
+  "spring_boot_from": "3.5.16",
+  "spring_boot_target": "4.0.9",
+  "spring_boot_target_rationale": "User steering mandates the Spring Boot 4.0 line exactly; 4.0.9 is the latest 4.0 patch. Overrides the skill default 4.1.0.",
+  "java": {
+    "detected": "25",
+    "target": "25",
+    "java_upgrade_needed": false,
+    "environment_jdk": "Corretto 25.0.5"
+  },
+  "detections": {
+    "jackson_usage": "none",
+    "jackson_custom_serializers": 0,
+    "security_present": false,
+    "security_filter_chain_count": 0,
+    "mockbean_usage": 0,
+    "spybean_usage": 0,
+    "observability": "actuator-only",
+    "reactive": false,
+    "modules": 1,
+    "estimated_loc": 663,
+    "spring_ai_present": false,
+    "spring_ai_version": "",
+    "mcp_present": false,
+    "spring_batch_present": false,
+    "spring_kafka_present": false,
+    "spring_amqp_present": false,
+    "spring_cloud_present": false,
+    "native_aot_present": false,
+    "jersey_present": false,
+    "spring_retry_present": false,
+    "jspecify_relevant": false,
+    "undertow_present": false,
+    "embedded_server_swap_present": false,
+    "springdoc_or_sba_present": false,
+    "thirdparty_compat_present": false,
+    "spring_grpc_present": false,
+    "jooq_present": false
+  },
+  "tds_required": [
+    "springboot4-core-migration",
+    "springboot4-observability",
+    "springboot4-verification"
+  ],
+  "tds_skipped": [
+    "springboot4-security-testing",
+    "springboot4-spring-ai",
+    "springboot4-spring-batch",
+    "springboot4-spring-kafka",
+    "springboot4-spring-amqp",
+    "springboot4-spring-cloud",
+    "springboot4-native-aot",
+    "springboot4-jersey",
+    "springboot4-spring-retry",
+    "springboot4-jspecify",
+    "springboot4-embedded-servers",
+    "springboot4-springdoc-sba",
+    "springboot4-thirdparty-compat",
+    "springboot4-grpc"
+  ],
+  "complexity_tier": "green-small",
+  "blockers": [],
+  "risks": [
+    "Boot 4.0.x runs on JDK 25, beyond its documented target of 21; toolchain plugins must be bumped rather than java.version lowered.",
+    "Stale Boot-3 BOM pins (tomcat.version 10.1.59, jackson-bom.version 2.21.7) must be deleted: Boot 4 ships Tomcat 11 and Jackson 3.",
+    "Groovy 5 / Spock 2.5 test context against Spring Framework 7.",
+    "Test-tree subclass of Spring's ShallowEtagHeaderFilter may need signature alignment with Spring 7."
+  ],
+  "recommendations": {
+    "use_bridges": false,
+    "extended_timeout": false,
+    "manual_review_areas": [
+      "Actuator endpoint exposure defaults differ in Boot 4; verify /actuator/health",
+      "java.util.Date usage in @RequestHeader(IF_MODIFIED_SINCE) binding"
+    ]
+  }
+}
