@@ -168,6 +168,38 @@ class DownloadControllerSpec extends Specification {
 					header().string(CONTENT_TYPE, "text/plain"))
 	}
 
+	def 'should redirect to URL with original file name'() {
+		expect:
+			mockMvc
+					.perform(
+					get('/download/' + FileExamples.TXT_FILE_UUID))
+					.andExpect(
+					status().isMovedPermanently())
+					.andExpect(
+					header().string(LOCATION, '/download/' + FileExamples.TXT_FILE_UUID + '/' + FileExamples.TXT_FILE.getOriginalName()))
+	}
+
+	def 'should return 404 on redirect if file not found'() {
+		expect:
+			mockMvc
+					.perform(
+					get('/download/' + FileExamples.NOT_FOUND_UUID))
+					.andExpect(
+					status().isNotFound())
+	}
+
+	def 'should return 304 instead of redirect if ETag matches'() {
+		expect:
+			mockMvc
+					.perform(
+					get('/download/' + FileExamples.TXT_FILE_UUID)
+							.header(IF_NONE_MATCH, FileExamples.TXT_FILE.getEtag()))
+					.andExpect(
+					status().isNotModified())
+					.andExpect(
+					header().string(ETAG, FileExamples.TXT_FILE.getEtag()))
+	}
+
 	private static String toDateHeader(Instant lastModified) {
 		ZonedDateTime dateTime = ZonedDateTime.ofInstant(lastModified, ZoneOffset.UTC)
 		DateTimeFormatter.RFC_1123_DATE_TIME.format(dateTime)
