@@ -1,6 +1,7 @@
 package com.nurkiewicz.download
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootContextLoader
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
@@ -20,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @WebAppConfiguration
-@ContextConfiguration(classes = [MainApplication])
+@ContextConfiguration(loader = SpringBootContextLoader, classes = [MainApplication])
 @ActiveProfiles("test")
 class DownloadControllerSpec extends Specification {
 
