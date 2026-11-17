@@ -12,6 +12,8 @@
         <tomcat.version>10.1.62</tomcat.version>
         <jackson-bom.version>2.21.8</jackson-bom.version>
         <log4j2.version>2.25.5</log4j2.version>
+        <groovy.version>5.0.8</groovy.version>
+        <spock.version>2.5-groovy-5.0</spock.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -29,19 +31,40 @@
                     <release>21</release>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>5.1.0</version>
+                <configuration>
+                    <targetBytecode>21</targetBytecode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>addTestSources</goal>
+                            <goal>compileTests</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Spec.java</include>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-spring</artifactId>
-            <version>1.0-groovy-2.4</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy-all</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>${spock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -70,7 +93,7 @@
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
-            <version>1.0-groovy-2.4</version>
+            <version>${spock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -121,9 +144,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.4.3</version>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>${groovy.version}</version>
         </dependency>
     </dependencies>
 </project>
