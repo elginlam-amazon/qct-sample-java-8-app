@@ -1,0 +1,35 @@
+repo: "download-server"
+spring_boot_source: "3.5.16"
+spring_boot_target: "4.0.9"
+build_tool: maven
+build_log: "~/.aws/atx/custom/20261118_183031_5fc233b0/artifacts/build-final.log"
+build_command: "mvn -B clean install -Dspotbugs.skip=true -Dcheckstyle.skip=true"
+
+results:
+  compilation: PASS
+  test_integrity: PASS
+  test_execution: 12
+  unit_tests:
+    total: 12
+    passed: 12
+    failed: 0
+    skipped: 0
+  deprecated_patterns:
+    jackson2_imports: 0
+    mockbean_annotations: 0
+    security_legacy_dsl: 0
+    old_property_keys: 0
+    old_starter_names: 0
+  runtime_smoke_test: "PASS - spring-boot:run on port 8099: /actuator/health 200 UP; /download/{uuid} 301; /download/{uuid}/{file} 200 with ETag; If-None-Match 304; If-Modified-Since 304; HEAD 200; invalid UUID 400"
+  cve_scan: "PASS - Spring Boot 4.0.9, Spring Framework 7.0.10, Tomcat 11.0.27, Jackson 3.1.7 and other resolved deps report no known CVEs"
+
+tds_applied:
+  - springboot4-core-migration
+  - springboot4-observability (no-op - only spring-boot-starter-actuator, no micrometer/otel deps or OTLP properties)
+  - springboot4-verification
+
+manual_review_needed:
+  - "Target constrained to the Spring Boot 4.0 line (steering). A future 4.1 bump must re-run the core-migration Step 7b pre-4.1 deprecation gate and the 4.1 property/advisory steps."
+  - "Test baseline extended to count Spock feature methods (def '...') because the only test is a Spock spec in DownloadControllerTest.groovy (12 features; 12 before and after)."
+  - "SpotBugs and Checkstyle are skipped by the requested build command; re-enable separately."
+  - "External monitoring should target /actuator/health (unchanged since the Boot 3 step)."
