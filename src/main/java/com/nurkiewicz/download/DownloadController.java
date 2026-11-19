@@ -1,6 +1,5 @@
 package com.nurkiewicz.download;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +26,6 @@ public class DownloadController {
 
 	private final FileStorage storage;
 
-	@Autowired
 	public DownloadController(FileStorage storage) {
 		this.storage = storage;
 	}
@@ -34,11 +34,11 @@ public class DownloadController {
 	public ResponseEntity<Resource> redirect(
 			HttpMethod method,
 			@PathVariable UUID uuid,
-			@RequestHeader(IF_NONE_MATCH) Optional<String> requestEtagOpt,
-			@RequestHeader(IF_MODIFIED_SINCE) Optional<Date> ifModifiedSinceOpt
+			@RequestHeader(value = IF_NONE_MATCH, required = false) String requestEtag,
+			@RequestHeader(value = IF_MODIFIED_SINCE, required = false) String ifModifiedSinceHeader
 			) {
 		return findExistingFile(method, uuid)
-				.map(file -> file.redirect(requestEtagOpt, ifModifiedSinceOpt))
+				.map(file -> file.redirect(Optional.ofNullable(requestEtag), parseIfModifiedSince(ifModifiedSinceHeader)))
 				.orElseGet(() -> new ResponseEntity<>(NOT_FOUND));
 	}
 
@@ -46,12 +46,23 @@ public class DownloadController {
 	public ResponseEntity<Resource> download(
 			HttpMethod method,
 			@PathVariable UUID uuid,
-			@RequestHeader(IF_NONE_MATCH) Optional<String> requestEtagOpt,
-			@RequestHeader(IF_MODIFIED_SINCE) Optional<Date> ifModifiedSinceOpt
+			@RequestHeader(value = IF_NONE_MATCH, required = false) String requestEtag,
+			@RequestHeader(value = IF_MODIFIED_SINCE, required = false) String ifModifiedSinceHeader
 			) {
 		return findExistingFile(method, uuid)
-				.map(file -> file.handle(requestEtagOpt, ifModifiedSinceOpt))
+				.map(file -> file.handle(Optional.ofNullable(requestEtag), parseIfModifiedSince(ifModifiedSinceHeader)))
 				.orElseGet(() -> new ResponseEntity<>(NOT_FOUND));
+	}
+
+	private static Optional<Instant> parseIfModifiedSince(String headerValue) {
+		if (headerValue == null) {
+			return Optional.empty();
+		}
+		try {
+			return Optional.of(ZonedDateTime.parse(headerValue, DateTimeFormatter.RFC_1123_DATE_TIME).toInstant());
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 
 	private Optional<ExistingFile> findExistingFile(HttpMethod method, @PathVariable UUID uuid) {
