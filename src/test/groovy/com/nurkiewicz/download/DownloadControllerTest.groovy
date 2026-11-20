@@ -2,7 +2,7 @@ package com.nurkiewicz.download
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.ContextConfiguration
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @WebAppConfiguration
-@ContextConfiguration(classes = [MainApplication])
+@SpringBootTest(classes = [MainApplication])
 @ActiveProfiles("test")
 class DownloadControllerSpec extends Specification {
 
@@ -166,6 +166,17 @@ class DownloadControllerSpec extends Specification {
 					status().isOk())
 					.andExpect(
 					header().string(CONTENT_TYPE, "text/plain"))
+	}
+
+	def 'should redirect to URL with original file name'() {
+		expect:
+			mockMvc
+					.perform(
+					get('/download/' + FileExamples.TXT_FILE_UUID))
+					.andExpect(
+					status().isMovedPermanently())
+					.andExpect(
+					redirectedUrl('/download/' + FileExamples.TXT_FILE_UUID + '/' + FileExamples.TXT_FILE.getOriginalName()))
 	}
 
 	private static String toDateHeader(Instant lastModified) {
