@@ -18,3 +18,15 @@ Build: `mvn -B clean install -Dspotbugs.skip=true -Dcheckstyle.skip=true` on JDK
 | Lombok, Gradle wrapper, Jakarta APIs, database/ORM | as listed | Not applicable | Not used by this project. There are no `javax.*` imports. |
 | Explicit `spring-*` dependency versions | n/a | Removed, now BOM-managed | This keeps them consistent with the Spring Boot parent. A duplicate `spring-test` declaration was removed. |
 | spotbugs / checkstyle | n/a | Skipped via build flags | The requested build command skips them. Neither plugin is configured in this project. |
+
+## Spring Boot 4.0 upgrade notes
+
+Target: Spring Boot **4.0.10**, the latest 4.0.x patch. The steering asked for 4.0 exactly, so 4.1 was not used. This brings Spring Framework 7.0.11, Tomcat 11.0.27, Jackson 3.1.8 and Logback 1.5.38. A CVE scan of these versions found no known vulnerabilities.
+
+| Change | Detail |
+|--------|--------|
+| Parent | `spring-boot-starter-parent` 3.5.16 -> 4.0.10 |
+| Starter rename | `spring-boot-starter-web` -> `spring-boot-starter-webmvc` |
+| Removed stale BOM pins | `tomcat.version` (10.1.62), `jackson-bom.version` (2.21.8, a Jackson 2 pin), `log4j2.version` (2.25.5). Boot 4.0.10 now manages these versions: Tomcat 11.0.27, Jackson 3.1.8, Log4j API 2.25.5. Each is equal to or newer than the old pin and has no known CVEs. |
+| spring-webmvc CVEs deferred in the Java 25 step | Resolved: the project is now on Spring Framework 7.0.11. |
+| Tests | Added a Spock feature for the `/download/{uuid}` 301 redirect, giving 13 specs. |

@@ -168,6 +168,17 @@ class DownloadControllerSpec extends Specification {
 					header().string(CONTENT_TYPE, "text/plain"))
 	}
 
+	def 'should redirect to URL with original file name'() {
+		expect:
+			mockMvc
+					.perform(
+					get('/download/' + FileExamples.TXT_FILE_UUID))
+					.andExpect(
+					status().isMovedPermanently())
+					.andExpect(
+					redirectedUrl('/download/' + FileExamples.TXT_FILE_UUID + '/' + FileExamples.TXT_FILE.getOriginalName()))
+	}
+
 	private static String toDateHeader(Instant lastModified) {
 		ZonedDateTime dateTime = ZonedDateTime.ofInstant(lastModified, ZoneOffset.UTC)
 		DateTimeFormatter.RFC_1123_DATE_TIME.format(dateTime)
