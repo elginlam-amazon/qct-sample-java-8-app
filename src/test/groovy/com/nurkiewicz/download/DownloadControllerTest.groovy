@@ -42,6 +42,17 @@ class DownloadControllerSpec extends Specification {
 					.andExpect(content().string("foobar"))
 	}
 
+	def 'should redirect to original file name'() {
+		expect:
+			mockMvc
+					.perform(
+						get('/download/' + FileExamples.TXT_FILE_UUID))
+					.andExpect(
+						status().isMovedPermanently())
+					.andExpect(
+						header().string(LOCATION, '/download/' + FileExamples.TXT_FILE_UUID + '/download.txt'))
+	}
+
 	def 'should return 404 and no content'() {
 		expect:
 			mockMvc
